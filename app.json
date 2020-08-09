@@ -1,0 +1,27 @@
+{
+  "name": "skincare",
+  "displayName": "skincare",
+  "expo": {
+    "name": "skincare",
+    "slug": "skincare",
+    "version": "1.0.0",
+    "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch" 
+        ]
+      }
+    },  
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "description": ""
+  }
+}
