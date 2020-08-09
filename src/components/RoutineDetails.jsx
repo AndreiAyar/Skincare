@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Image, Platform } from 'react-nativ
 const screenWidth = Math.round(Dimensions.get('window').width);
 
 const RoutineDetails = () => {
+    //before database connection
     let data = [{ id: 1, type: 'Cleanser', source: require('../resources/products/1.png') },
     { id: 2, type: "Moisturizer", source: require('../resources/products/2.png') },
     { id: 3, type: "Cleaning", source: require('../resources/products/2.png') },
