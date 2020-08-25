@@ -45,11 +45,12 @@ const ROUTINES_GQL = gql`
 
 const Main = ({ navigation }) => {
   const mainStateContext = useContext(MainStateContext);
+ // mainStateContext.setNavigation(navigation)
   let scrollRef = null;
   let rows;
   let skinTypes;
   const handleScrollToRef = () => {
-    scrollRef.scrollTo({ y: 200, animated: true });
+    scrollRef.scrollTo({ y: 200, animated: true }); 
     //   rows.measure((ox, oy, width, height, px, py) => {
     //     console.log(oy)
     //   })

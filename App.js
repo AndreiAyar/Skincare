@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Text, Button } from 'react-native';
 
 
 import { AppRegistry } from 'react-native';
@@ -12,7 +12,7 @@ import { HttpLink } from 'apollo-link-http';
 import { MainState, MainStateContext } from './src/context/MainContext'
 
 import Navigation from './src/navigation/Navigation';
-
+import PushHandlerRedirect from './src/navigation/PushHandler'
 import { AsyncStorage } from 'react-native';
 
 
@@ -21,15 +21,13 @@ const client = new ApolloClient(
     cache: new InMemoryCache(),
     link: new HttpLink(
       {
-        uri: 'http://rinx.tplinkdns.com:4000/graphql' //'http://homesev.tplinkdns.com:4000/'
+        uri: 'http://homesev.tplinkdns.com:4000/graphql' //'http://homesev.tplinkdns.com:4000/'
       }
     )
   })
 
-export default function App() {
-
+const App = () => {
   //   headerBackImage:props =>( <Image   style={{ width: 50, height: 50 }} source={require("./src/resources/back.png")} /> ),
-
   return (
     <ApolloProvider client={client}>
       <MainState>
@@ -58,3 +56,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+
+export default App

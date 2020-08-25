@@ -80,7 +80,7 @@ const PushController = ({ laba }) => {
             title: mainStateContext.notificationData.title,
             body: mainStateContext.notificationData.body,
             data: { data: 'ho' },
-            _displayInForeground: true,
+          //  _displayInForeground: true,
         };
         const response = await fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',

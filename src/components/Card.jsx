@@ -22,6 +22,7 @@ const Card = ({ item, navigation }) => {
           screen: "Main",
           id: item._id,
           routine: item.name,
+          routine_id:item._id
         })
       }
     >
@@ -55,7 +56,7 @@ const Card = ({ item, navigation }) => {
             <Image
               style={styles.card_image}
               source={{
-                uri: "http://rinx.tplinkdns.com:4000/static/" + item.src,
+                uri: "http://homesev.tplinkdns.com:4000/static/" + item.src,
               }}
             />
 

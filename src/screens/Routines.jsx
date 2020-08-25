@@ -49,24 +49,19 @@ const ROUTINES_GQL = gql`
 `;
 const screenWidth = Dimensions.get("screen").width;
 const Routines = ({ route, navigation }) => {
-  const { id, routine } = route.params;
-  const routineTypes = [
-    { id: 1, type: "Morning Routine", steps: 4 },
-    { id: 2, type: "Night Routine", steps: 5 },
-    { id: 3, type: "Weekly Routine", steps: 8 },
-  ];
+  const { id, routine,routine_id } = route.params;
+
   //  let routinesData, isLoading, isError;
   const routinesData = useQuery(ROUTINES_GQL, {
     variables: { filter: routine },
   });
   //console.log(routinesData.data)
   if (routinesData && routinesData.data) {
-    console.log(routinesData.data);
+ ///   console.log(routinesData.data);
   }
 
   const [setSkin, { data, loading }] = useMutation(SKIN_GQL, {
     onCompleted(data) {
-      console.log(data);
       storeToken(data.setSkin.token);
     },
   });
@@ -164,12 +159,14 @@ const Routines = ({ route, navigation }) => {
           </TouchableOpacity>
           {routinesData && routinesData.data ? (
             <View style={styles.banner_section}>
-                 {routinesData.data.routines.map(({RoutineDetails}) => RoutineDetails.map(({partOfDay, _id,products}, key)=>(
+                 {routinesData.data.routines.map(({RoutineDetails,_id}) => RoutineDetails.map(({partOfDay,products}, key)=>(
+                  // console.log('coaie',_id  ),
                 <RoutineBanner
                   navigation={navigation}
                   key={key}
                   arrow
-                  data={{partOfDay, _id,products}}//{ bannerData._id, bannerData.partOfDay,`${"steps"} Steps and products`}
+                  mainRoutineID = {_id}
+                  data={{partOfDay,products}}//{ bannerData._id, bannerData.partOfDay,`${"steps"} Steps and products`}
                 />
                  )))}
             </View>

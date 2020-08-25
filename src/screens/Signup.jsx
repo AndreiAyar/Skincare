@@ -32,7 +32,7 @@ const Signup = () => {
 
     const [register, { data, loading }] = useMutation(REGISTER_GQL, {
         onCompleted(data) {
-            console.log(data.register)
+        //    console.log(data.register)
        //    setUserName(null)
        //     setEmail(null)
        //     setPassword(null)

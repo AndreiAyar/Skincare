@@ -9,11 +9,12 @@ const User = require('./models/User');
 const Product = require('./models/Product')
 const Routine = require('./models/Routine')
 const RoutineDetails = require('./models/RoutineDetails')
+const Post = require('./models/Posts')
 const validate = require('../shared/validate')
 const jwt = require('jsonwebtoken')
 
-const _SECRET = 'oA*m38FzEY,:UsLmosNm^uokjJJs)PO.,Jasdadasssddddddsqqqqqqqqyutaasdcbaasasassa1aalklklklkssaasscccazasdadadasssadsasdsanfdsnnnlsSA03ss2lillla1212dssskkxvvvooqqrqlldddlffskk0llllldo3k4IAjjkkkml;;;lllldxxkfkIOoiIi""1S1s|"SVISN,3&:oU&/m@,.;;;Zaa)())))ob*NFu|j&_+,:eA_ay9qWz*';
-
+const _SECRET = 'oA*m38FzEY,:UsLmosNm^uokjJJs)PO.,Jasdadasssddddddsqqqzzzzzqqcasqqqqqqyutasasdcbaasasassa1aalklklklkssaasscccazasdadadasssadsasdsanfdsnnnlsSA03ss2lillla1212dssskkxvvvooqqrqlldddlffskk0llllldo3k4IAjjkkkml;;;lllldxxkfkIOoiIi""1S1s|"SVISN,3&:oU&/m@,.;;;Zaa)())))ob*NFu|j&_+,:eA_ay9qWz*';
+// merge type defs
 const typeDefs = gql`
  
   type User {
@@ -46,6 +47,8 @@ const typeDefs = gql`
      partOfDay:String
       products:[Product]
   }
+
+  # am nevoie si de type si de input 
   type Product{
     _id:String       
     type:String                 
@@ -66,7 +69,7 @@ const typeDefs = gql`
   type RegisterResult {
       user:User
       success:Boolean
-      message: String
+      message: String   
       token: String
   }
   type SetSkinResult{
@@ -74,18 +77,38 @@ const typeDefs = gql`
       message:String
       token:String
   }
-  type SetNotificationResult{
+  type updateNotificationResult{
       success:Boolean
       message:String
       token:String
   }
+  type RemoveNotificationResult{
+      success:Boolean
+      message:String
+      token:String
+  }
+  type Post {
+    title:String,
+    tags:[Tag],
+    entire_post:String,
+    src:String
+    inner_src:String
+    shortDesc:String
+  }
+
   type Query {
     user(email:String): [User]
     routines(filter:String):[Routine]
     me(token:String): User
+    posts:[ Post]
    # products():
   }
-
+  type Tag {
+      name:String
+  }
+  input TagInput{  
+      name:String
+  }
   input ProductRef{
     _id:String       
 
@@ -99,23 +122,26 @@ const typeDefs = gql`
     register(username: String!, password: String!, email: String!, skintype:String): RegisterResult
     queryTest(username: String!, password: String!, email: String!, skintype:String): RegisterResult
     setSkin(id:String!, skintype:String!):SetSkinResult
-    setNotification(userId:String!, routine_id:String, morning_notification:String, night_notification:String, custom_notification:String):SetNotificationResult
+    updateNotification(userId:String!, routine_id:String, morning_notification:String, night_notification:String, custom_notification:String):updateNotificationResult
     #setRoutine(id:String!, skintype:Int!):SetSkinResult
     addRoutine(name:String,RoutineDetails:[RoutineDetailsRef],notification_hours:String, src:String):Routine
-    addProduct(         
-    type:String,                
-    name:String,                   
-    title:String,                  
-    description:String,                                   
-    src:String,                               
-    refferal:String,):Product
-    
+    addProduct(type:String, name:String,title:String,description:String,src:String,refferal:String):Product
+    addPost(title:String,shortDesc:String, tags:[TagInput], entire_post:String,src:String, inner_src:String):Post
     addDetailsAboutRoutine(partOfDay:String, products:[ProductRef]):RoutineDetails
+    removeNotification(userId:String!, routine_id:String):RemoveNotificationResult
   }
 `;
+//import routines from...
 const resolvers = {
     Query: {
         user: () => user,
+        posts: async () => {
+            const existingPosts = await Post.find({})
+        //    console.log(existingPosts)
+            return existingPosts
+
+        },
+        //   routines:routines
         routines: async (_, { filter }) => {
             let result;
             const existingRoutines = await Routine.find({})
@@ -135,7 +161,7 @@ const resolvers = {
                             }
                         }
                     })
-                }
+                }//data loader graphql
             })
             )
             const existingRoutinesWithTheirProducts = await Promise.all(existingRoutines.map(routine => Promise.all(routine.RoutineDetails.map(({ products }) => Promise.all(products.map(({ _id }) => Product.findById(_id)))))))
@@ -161,17 +187,14 @@ const resolvers = {
                     }))
                 }
             }))
-
-
-
             )
-            if(filter !== undefined){
+            if (filter !== undefined) {
                 result = existingRoutines.filter(partOfTheDay => partOfTheDay.name == filter)
-            }else{
+            } else {
                 result = existingRoutines
             }
-            
-            
+
+
             return result
 
 
@@ -259,7 +282,6 @@ const resolvers = {
             const payload = {
                 _id: userExists[0].id,
                 username: userExists[0].username,
-                //   email: userExists[0].email,
                 skintype: userExists[0].skintype,
                 notifications: userExists[0].notifications
             }
@@ -297,7 +319,8 @@ const resolvers = {
                 const payload = {
                     _id: userExists[0].id,
                     username: userExists[0].username,
-                    skintype: userExists[0].skintype
+                    skintype: userExists[0].skintype,
+                    notifications: userExists[0].notifications
                 }
                 const token = jwt.sign({
                     data: payload
@@ -315,7 +338,7 @@ const resolvers = {
             }
 
         },
-        setNotification: async (_, { userId, routine_id, morning_notification, night_notification, custom_notification }) => {
+        updateNotification: async (_, { userId, routine_id, morning_notification, night_notification, custom_notification }) => {
             // console.log(id, routineType, morning_notification, night_notification, custom_notification)
             if (!userId) {// !routine_id) {
                 return {
@@ -324,17 +347,114 @@ const resolvers = {
                 }
             }
             try {
-                let userRoutineToBeModified = await User.findById(userId);
-                console.log(userRoutineToBeModified)
-                userRoutineToBeModified.notifications.push({ routine_id, morning_notification, night_notification, custom_notification })
+                // let userRoutineToBeModified = await User.findById(userId);
+                let userRoutineToBeModified = await User.findOne({ _id: userId }).where({ "notifications.routine_id": routine_id })
+                if (!userRoutineToBeModified) {// let's see if there is any user available and add them that routine :) 
+                    console.log('nu exista')
+                    let userExistsToBeUpdated = await User.findById(userId);
+                    if (userExistsToBeUpdated) {
+                        userExistsToBeUpdated.notifications.push({ routine_id, morning_notification, night_notification, custom_notification })
+                        await userExistsToBeUpdated.save();
+                    }
+                } else if (userRoutineToBeModified) {
+                    userRoutineToBeModified.notifications.map(async notifications => {
+                        if (notifications.routine_id === routine_id) {
+                            //console.log(notifications)
+                            if (morning_notification) {
+                                await User.findOneAndUpdate({ "_id": userId, "notifications.routine_id": routine_id },
+                                    {
+                                        "notifications.$.morning_notification": morning_notification ? morning_notification : notifications.morning_notification,
+                                    }
 
-                await userRoutineToBeModified.save();
+                                )
+                            }
+                            if (night_notification) {
+                                await User.findOneAndUpdate({ "_id": userId, "notifications.routine_id": routine_id },
+                                    {
+                                        "notifications.$.night_notification": night_notification ? night_notification : notifications.night_notification,
+                                    }
 
+                                )
+                            }
+                            if (custom_notification) {
+                                await User.findOneAndUpdate({ "_id": userId, "notifications.routine_id": routine_id },
+                                    {
+                                        "notifications.$.custom_notification": custom_notification ? custom_notification : notifications.custom_notification
+                                    }
+
+                                )
+                            }
+
+                            //   console.log(z)
+                        }
+                    })
+                    await userRoutineToBeModified.save();
+                }
+                const userExists = await User.find({ _id: userId })
+                const payload = {
+                    _id: userExists[0].id,
+                    username: userExists[0].username,
+                    skintype: userExists[0].skintype,
+                    notifications: userExists[0].notifications
+                }
+                const token = jwt.sign({
+                    data: payload
+                }, _SECRET, { expiresIn: '1y' })
                 return {
                     success: true,
-                    message: "Skin routine done !",
-                    //      token: token
+                    message: "Set notificaiton done!",
+                    token: token
                 }
+
+            } catch (error) {
+                console.log(error)
+                return {
+                    success: false,
+                    message: "Something went wrong... Please try again!"
+                }
+            }
+
+        },
+        removeNotification: async (_, { userId, routine_id }) => {
+            // console.log(id, routineType, morning_notification, night_notification, custom_notification)
+            if (!userId) {// !routine_id) {
+                return {
+                    success: false,
+                    message: "Something went wrong. Please try again!"
+                }
+            }
+            try {
+                // let userRoutineToBeModified = await User.findById(userId);
+                let userExistsToBeUpdated = await User.findOne({ _id: userId }).where({ "notifications.routine_id": routine_id })
+                if (userExistsToBeUpdated) {
+                    userExistsToBeUpdated.notifications.map(async notifications => {
+                        if (notifications.routine_id === routine_id) {
+                            //console.log(notifications)    
+                            await userExistsToBeUpdated.notifications.pull(notifications._id)
+                            //   console.log(z)
+                        }
+                    })
+
+                }
+                console.log(userExistsToBeUpdated)
+                // userExistsToBeUpdated.notifications.deleteOne({"notifications.routine_id":routine_id})
+                await userExistsToBeUpdated.save();
+                const userExists = await User.find({ _id: userId })
+                const payload = {
+                    _id: userExists[0].id,
+                    username: userExists[0].username,
+                    skintype: userExists[0].skintype,
+                    notifications: userExists[0].notifications
+                }
+                const token = jwt.sign({
+                    data: payload
+                }, _SECRET, { expiresIn: '1y' })
+                return {
+                    success: true,
+                    message: "Removed notification done!",
+                    token: token
+                }
+
             } catch (error) {
                 console.log(error)
                 return {
@@ -420,15 +540,34 @@ const resolvers = {
             }
 
         },
+        addPost: async (_, { title, tags, entire_post, src, shortDesc, inner_src }) => {
+            //   console.log(_)
+            if (!title) {
+                return {
+                    name: "Please insert a title"
+                }
+            }
+            try {
+                const createdPost = new Post({ title, tags, entire_post, src, shortDesc, inner_src })
+                await createdPost.save();
+                return createdPost
+            } catch (error) {
+                return {
+                    success: false,
+                    message: "Someting went wrong.. Please try again!"
+                }
+            }
+        }
     }
 }
+
 
 
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@skc-cluster-mbexs.mongodb.net/skcdb?retryWrites=true&w=majority`)
     .then(() => {
         const server = new ApolloServer({ typeDefs, resolvers });
         app.use('/static', express.static('../src/resources'))//Setting resources path
-
+        mongoose.set('useFindAndModify', false);
 
 
         server.applyMiddleware({ app });

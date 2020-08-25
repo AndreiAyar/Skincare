@@ -20,9 +20,9 @@ import {
 } from "react-native-gesture-handler";
 
 const screenWidth = Dimensions.get("screen").width;
-const RoutineBanner = ({ data, timer, navigation, arrow, }) => {
-  console.log("ici", data);
-  const { _id, partOfDay, products, innerText} = data;
+const RoutineBanner = ({mainRoutineID, data, timer, navigation, arrow, }) => {
+ // console.log("ici", data);
+  const { partOfDay, products, innerText} = data;
   const styles = StyleSheet.create({
     banner: {
       alignItems: timer && "center",
@@ -78,9 +78,10 @@ const RoutineBanner = ({ data, timer, navigation, arrow, }) => {
               !timer &&
               navigation.navigate("Routine", {
                 screen: "Routines",
-                id: _id,
+                id: mainRoutineID,
                 steps:products.length,
                 type: partOfDay,
+                products:products
               })
             }
           >

@@ -43,6 +43,7 @@ const Logon = ({ navigation }) => {
         //     console.log(` A venit din backend: ${data.login.token}`)
         storeToken(data.login.token);
         mainStateContext.setStoredData(data.login.token);
+        mainStateContext.setNavigation(navigation)
         //     navigation.dispatch(
         //        CommonActions.reset({
         //         index: 1,

@@ -18,9 +18,10 @@ import RoutineDetails from "../components/RoutineDetails";
 import SectionHeader from "../components/SectionHeader";
 import LocalNotification from "../components/LocalNotification";
 import Icon from "react-native-vector-icons/Feather";
-
+import { storeToken } from "../controllers/StorageHandler";
 import { MainStateContext } from "../context/MainContext";
-
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 
@@ -32,7 +33,30 @@ const screenWidth = Math.round(Dimensions.get("window").width);
 let now;
 const IMAGE_HEIGHT = 200;
 
+const UPDATE_NOTIFICATION = gql`
+  mutation updateNotification(
+    $userId: String!
+    $routine_id: String!
+    $morning_notification: String
+    $night_notification: String
+    $custom_notification: String
+  ) {
+    updateNotification(
+      userId: $userId
+      routine_id: $routine_id
+      morning_notification: $morning_notification
+      night_notification: $night_notification
+      custom_notification: $custom_notification
+    ) {
+      message
+      success
+      token
+    }
+  }
+`;
+
 const Routine = (props) => {
+  const navigation = useNavigation();
   const [scrollY, setScrollY] = useState(0);
   const imageMap = {
     "morning.jpg": require("../resources/routines/morning.jpg"),
@@ -40,11 +64,16 @@ const Routine = (props) => {
   };
 
   let scrollAnimatedValue = new Animated.Value(0);
-  const { id, type } = props.route.params;
-  console.log(props.route.params);
+  const { id, type, products } = props.route.params;
+  //console.log('fum', id)
+  let routine_id = id;
+  // console.log('rid')
+  // console.log(products)
+  // console.log(props.route.params);
+  //console.log('id la rutina ? ', id)
   const insets = useSafeArea();
   const { top: marginTop } = insets;
-  const navigation = useNavigation();
+
   const handleScroll = (event) => {
     //setScrollY(event.nativeEvent.contentOffset.y)
     now = event.nativeEvent.contentOffset.y;
@@ -189,19 +218,36 @@ const Routine = (props) => {
               //  position: now > 163 ? "absolute" : "static",
             }}
           />
-          <RoutineTime type={{ id, type }} />
-          <RoutineDetails />
+          <RoutineTime
+            routeParams={props.route.params}
+            type={{ routine_id, type }}
+          />
+          <RoutineDetails data={products} />
         </View>
       </Animated.ScrollView>
     </View>
   );
 };
 
-const RoutineTime = ({ type }) => {
+const RoutineTime = ({ routeParams, routine_id, type }) => {
   const [time, setTime] = useState(Date.parse(moment("09:00", "HH:mm")));
   const [show, setShow] = useState(false);
-  const { assignNotification, state } = useContext(MainStateContext);
-  console.log(type);
+  const { assignNotification, state, setNavigation, me ,setStoredData} = useContext(
+    MainStateContext
+  );
+  const [updateNotification, { data, loading }] = useMutation(
+    UPDATE_NOTIFICATION,
+    {
+      onCompleted(data) {
+        storeToken(data.updateNotification.token);
+        setStoredData(data.updateNotification.token);
+        me();
+      },
+    }
+  );
+  const navigation = useNavigation();
+
+  // console.log(state.user._id);
   const onChange = (event, selectedTime) => {
     let currentDay = moment().day();
     let currentTime = moment(selectedTime || time)
@@ -215,23 +261,24 @@ const RoutineTime = ({ type }) => {
       moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
     ) {
       currentTime = moment(currentTime).add(1, "days").toDate(); //utc().format('YYYY-MM-DDTHH:mm:ssZZ')
-      console.log("maine");
+      //    console.log("maine");
     } else {
       console.log(
         "selectat: ",
         moment(currentTime).format("YYYY-MM-DD HH:mm:ss")
       );
       console.log("acum: ", moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-      console.log("azi");
+      //   console.log("azi");
       //   currentTime =  moment(selectedTime).add(-1, 'days').toDate();
     }
     setShow(Platform.OS === "ios");
     setTime(currentTime);
     //  console.log("sa mori tu");
     Platform.OS == "android" && setNotification(currentTime);
-    console.log(time, "in state");
+    //   console.log(time, "in state");
     //  console.log(moment(currentTime).format("YYYY-MM-DD HH:mm:ss"));
   };
+
   const style = StyleSheet.create({
     container: {
       alignSelf: "center",
@@ -276,21 +323,59 @@ const RoutineTime = ({ type }) => {
   const showTime = () => {
     setShow(show == false ? true : false);
   };
+  const handleNotificationUpdateInDatabase = (w, r, u, t) => {
+    //when,routineID, user, time
+    console.log("cand in zi", w);
+    switch (w) {
+      case "morning":
+        updateNotification({
+          variables: { userId: u, routine_id: r, morning_notification: t },
+        });
+        break;
+      case "night":
+        updateNotification({
+          variables: { userId: u, routine_id: r, night_notification: t },
+        });
+        break;
+      case "weekly":
+        updateNotification({
+          variables: { userId: u, routine_id: r, custom_notification: t },
+        });
+        break;
+      default:
+        break;
+    }
+  };
   const partOfTheDay = type.type;
   const setNotification = (time) => {
     console.log("aci e:", time);
     showTime();
-    assignNotification(partOfTheDay, "Get in the App to find More!😀", time);
+    console.log("idu meu este", type.routine_id);
+    setNavigation(navigation);
+    assignNotification(
+      partOfTheDay,
+      "Get in the App to find More!😀",
+      time,
+      type.routine_id,
+      routeParams
+    );
+    console.log(partOfTheDay);
+    handleNotificationUpdateInDatabase(
+      partOfTheDay,
+      type.routine_id,
+      state.user._id,
+      time
+    );
   };
   return (
     <View style={style.container}>
-      <Text>ID este: {state.notifications.id}</Text>
+      {<Text>ID este: {state.notifications.time}</Text>}
       <RoutineBanner
         navigation
         timer={() => showTime()}
         data={{
           id: 1,
-          type:' type.type',
+          partOfDay: type.type,
           innerText: `Daily reminder set at: ${moment(time).format("HH:mm")}`,
         }}
         // innerText={`{Daily reminder set at: ${moment(time).format("HH:mm")}`}

@@ -14,7 +14,7 @@ const storeToken = async (data) => {
 const readToken = async (token) => {
     let readedToken;
     try {
-       await AsyncStorage.getItem("__token", (error, result) => {
+       await AsyncStorage.getItem(token, (error, result) => {
             error
                 ? readedToken = null
                 : result == null
