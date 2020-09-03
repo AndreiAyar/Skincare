@@ -25,14 +25,6 @@ const ME_GQL = gql`
       _id
       username
       skintype
-      notifications {
-        routine_id {
-          name
-        }
-        morning_notification
-        night_notification
-        custom_notification
-      }
     }
   }
 `;
@@ -51,15 +43,15 @@ const MainState = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
   //console.log(storedData)
   // console.log('innotif',notification);
-  RootNavigation && console.log(RootNavigation);
+ // RootNavigation && console.log(RootNavigation);
 
-  const [me, { data, loading }] = useLazyQuery(ME_GQL, {
+  const { data, loading } = useQuery(ME_GQL, {
     variables: {
       token: storedData,
     },
 
     onCompleted(data) {
-      console.log("peyload", data.me);
+      //console.log(storedData)
       dispatch({
         type: "INIT_USER",
         payload: data.me,
@@ -68,23 +60,23 @@ const MainState = ({ children }) => {
   });
 
   //Actions
-  const assignNotification = (
-    partOfTheDay,
-    body,
-    time,
-    routine_id,
-    route_params
-  ) => {
-    dispatch({
-      type: "ASSIGN_NOTIFICATION",
-      title: `Time for your ${partOfTheDay} 🥰 !`,
-      body: body,
-      time: time,
-      partOfTheDay,
-      routine_id,
-      route_params,
-    });
-  };
+  // const assignNotification = (
+  //   partOfTheDay,
+  //   body,
+  //   time,
+  //   routine_id,
+  //   route_params
+  // ) => {
+  //   dispatch({
+  //     type: "ASSIGN_NOTIFICATION",
+  //     title: `Time for your ${partOfTheDay} 🥰 !`,
+  //     body: body,
+  //     time: time,
+  //     partOfTheDay,
+  //     routine_id,
+  //     route_params,
+  //   });
+  // };
 
   const setSkinType = (skintype) => {
     dispatch({
@@ -93,12 +85,13 @@ const MainState = ({ children }) => {
     });
   };
   const handleNotification = async (notification) => {
+    console.log(notification)
     setNotification(notification);
     RootNavigation.navigate("Routine", {
       screen: "Routines",
-      id: notification.data.id,
+      id: notification.data.routine_id,
       steps: notification.data.products.length,
-      type: notification.data.type,
+      type: notification.data.partOfDay,
       products: notification.data.products,
     });
   };
@@ -114,7 +107,7 @@ const MainState = ({ children }) => {
         ? setStoredData("_")
         : setStoredData(result);
     });
-    me();
+
   }, []);
 
   return (
@@ -122,8 +115,6 @@ const MainState = ({ children }) => {
       value={{
         state,
         setStoredData,
-        me,
-        assignNotification,
         setSkinType,
         setNavigation,
       }}

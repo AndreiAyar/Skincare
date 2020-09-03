@@ -25,7 +25,7 @@ const SKIN_GQL = gql`
   }
 `;
 const ROUTINES_GQL = gql`
-  query routines($filter: String) {
+  query routines($filter: [Filter]) {
     routines(filter: $filter) {
       _id
       name
@@ -50,10 +50,10 @@ const ROUTINES_GQL = gql`
 const screenWidth = Dimensions.get("screen").width;
 const Routines = ({ route, navigation }) => {
   const { id, routine,routine_id } = route.params;
-
+  //console.log('ce e in routine', routine_id)
   //  let routinesData, isLoading, isError;
   const routinesData = useQuery(ROUTINES_GQL, {
-    variables: { filter: routine },
+    variables: { filter: {routine_id:routine_id}},
   });
   //console.log(routinesData.data)
   if (routinesData && routinesData.data) {

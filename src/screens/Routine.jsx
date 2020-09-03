@@ -18,7 +18,6 @@ import RoutineDetails from "../components/RoutineDetails";
 import SectionHeader from "../components/SectionHeader";
 import LocalNotification from "../components/LocalNotification";
 import Icon from "react-native-vector-icons/Feather";
-import { storeToken } from "../controllers/StorageHandler";
 import { MainStateContext } from "../context/MainContext";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
@@ -28,6 +27,7 @@ import moment from "moment";
 import { SafeAreaView } from "react-navigation";
 import { setPlaneDetection } from "expo/build/AR";
 import RoutineBanner from "../components/RoutineBanner";
+import useNotification from "../controllers/NotificationsController";
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 let now;
@@ -51,12 +51,19 @@ const UPDATE_NOTIFICATION = gql`
       message
       success
       token
+      activeNotifications{
+      routine_id
+      morning_notification
+      custom_notification
+      night_notification
+    }
     }
   }
 `;
 
 const Routine = (props) => {
   const navigation = useNavigation();
+
   const [scrollY, setScrollY] = useState(0);
   const imageMap = {
     "morning.jpg": require("../resources/routines/morning.jpg"),
@@ -230,52 +237,59 @@ const Routine = (props) => {
 };
 
 const RoutineTime = ({ routeParams, routine_id, type }) => {
-  const [time, setTime] = useState(Date.parse(moment("09:00", "HH:mm")));
+  const [time, setTime] = useState( moment("09:00", "HH:mm").toDate());
   const [show, setShow] = useState(false);
-  const { assignNotification, state, setNavigation, me ,setStoredData} = useContext(
-    MainStateContext
-  );
+ const {assignNotification} = useNotification()
+  const navigation = useNavigation();
+ // console.log(notifHook)
+    
+  const { state, setNavigation } = useContext( MainStateContext);
   const [updateNotification, { data, loading }] = useMutation(
     UPDATE_NOTIFICATION,
     {
       onCompleted(data) {
-        storeToken(data.updateNotification.token);
-        setStoredData(data.updateNotification.token);
-        me();
+  
+      //  assignNotification(data.updateNotification);
+    //  notificationHandler.assignNotification();
+      assignNotification(data.updateNotification);
+      //notificationsHandler(data.updateNotification)
+      //  useNotifications(data.updateNotification, routeParams)
       },
     }
   );
-  const navigation = useNavigation();
 
-  // console.log(state.user._id);
+  //console.log(state.user._id);
   const onChange = (event, selectedTime) => {
-    let currentDay = moment().day();
+      let currentDay = moment().day();
     let currentTime = moment(selectedTime || time)
       .day(currentDay)
       .toDate(); //|| time).toDate();
     //onsole.log(selectedTime, 'atat e selectat')
     // currentTime && console.log("here", currentTime && moment(currentTime).format("YYYY-MM-DD HH:mm:ss"), moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
     //  console.log(moment(currentTime).format("YYYY-MM-DD HH:mm:ss") <= moment(new Date()).format("YYYY-MM-DD HH:mm:ss")? "maine" : " azi")
+    //console.log('in bulangiu', selectedTime)
+    //console.log('in state', time)
     if (
       moment(currentTime).format("YYYY-MM-DD HH:mm:ss") <=
       moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
     ) {
-      currentTime = moment(currentTime).add(1, "days").toDate(); //utc().format('YYYY-MM-DDTHH:mm:ssZZ')
-      //    console.log("maine");
+    // currentTime = moment(selectedTime).add(1, "days").toDate(); //utc().format('YYYY-MM-DDTHH:mm:ssZZ')
+      console.log("maine",currentTime);
     } else {
       console.log(
         "selectat: ",
-        moment(currentTime).format("YYYY-MM-DD HH:mm:ss")
+        moment(currentTime).utc().format("YYYY-MM-DD HH:mm:ss")
       );
       console.log("acum: ", moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-      //   console.log("azi");
-      //   currentTime =  moment(selectedTime).add(-1, 'days').toDate();
+      console.log("azi");
+    //  currentTime  = moment(t).toDate()
+      // currentTime =  moment(selectedTime).add(-1, 'days').toDate();
     }
     setShow(Platform.OS === "ios");
     setTime(currentTime);
     //  console.log("sa mori tu");
     Platform.OS == "android" && setNotification(currentTime);
-    //   console.log(time, "in state");
+    console.log(time, "in stsate");
     //  console.log(moment(currentTime).format("YYYY-MM-DD HH:mm:ss"));
   };
 
@@ -325,7 +339,7 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
   };
   const handleNotificationUpdateInDatabase = (w, r, u, t) => {
     //when,routineID, user, time
-    console.log("cand in zi", w);
+   // console.log("cand in zi", w);
     switch (w) {
       case "morning":
         updateNotification({
@@ -348,28 +362,29 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
   };
   const partOfTheDay = type.type;
   const setNotification = (time) => {
-    console.log("aci e:", time);
+   console.log("aci e:", time);
     showTime();
-    console.log("idu meu este", type.routine_id);
+    //console.log("idu meu este", type.routine_id);
     setNavigation(navigation);
-    assignNotification(
-      partOfTheDay,
-      "Get in the App to find More!😀",
-      time,
-      type.routine_id,
-      routeParams
-    );
-    console.log(partOfTheDay);
+    // assignNotification(
+    //   partOfTheDay,
+    //   "Get in the App to find More!😀",
+    //   time,
+    //   type.routine_id,
+    //   routeParams
+    // );
+  //  setRouteParams(routeParams)
     handleNotificationUpdateInDatabase(
       partOfTheDay,
       type.routine_id,
       state.user._id,
       time
     );
+ 
   };
   return (
     <View style={style.container}>
-      {<Text>ID este: {state.notifications.time}</Text>}
+      {/* {<Text>ID este: {state.notifications.time}</Text>} */}
       <RoutineBanner
         navigation
         timer={() => showTime()}

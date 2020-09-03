@@ -13,7 +13,7 @@ const Post = require('./models/Posts')
 const validate = require('../shared/validate')
 const jwt = require('jsonwebtoken')
 
-const _SECRET = 'oA*m38FzEY,:UsLmosNm^uokjJJs)PO.,Jasdadasssddddddsqqqzzzzzqqcasqqqqqqyutasasdcbaasasassa1aalklklklkssaasscccazasdadadasssadsasdsanfdsnnnlsSA03ss2lillla1212dssskkxvvvooqqrqlldddlffskk0llllldo3k4IAjjkkkml;;;lllldxxkfkIOoiIi""1S1s|"SVISN,3&:oU&/m@,.;;;Zaa)())))ob*NFu|j&_+,:eA_ay9qWz*';
+const _SECRET = 'oA*m38FzEY,:UsLmosNm^uokjJJs)PO.,Jasdadasssddddddsqqqzzzzzqqcasqqqqqqyutasasdcbaasasaaasssssa1aalklklklkssaasscccazasdadadasssadsasdsanfdsnnnlsSA03ss2lillla1212dssskkxvvvooqqrqlldddlffskk0llllldo3k4IAjjkkkml;;;lllldxxkfkIOoiIi""1S1s|"SVISN,3&:oU&/m@,.;;;Zaa)())))ob*NFu|j&_+,:eA_ay9qWz*';
 // merge type defs
 const typeDefs = gql`
  
@@ -26,7 +26,7 @@ const typeDefs = gql`
     notifications:[Notification]
   }
   type Notification{
-      routine_id:Routine,
+      routine_id:String,
       morning_notification: String,
       night_notification: String,
       custom_notification: String
@@ -81,6 +81,7 @@ const typeDefs = gql`
       success:Boolean
       message:String
       token:String
+      activeNotifications:[Notification]
   }
   type RemoveNotificationResult{
       success:Boolean
@@ -98,7 +99,7 @@ const typeDefs = gql`
 
   type Query {
     user(email:String): [User]
-    routines(filter:String):[Routine]
+    routines(filter:[Filter]):[Routine]
     me(token:String): User
     posts:[ Post]
    # products():
@@ -108,6 +109,9 @@ const typeDefs = gql`
   }
   input TagInput{  
       name:String
+  }
+  input Filter{
+      routine_id:String
   }
   input ProductRef{
     _id:String       
@@ -137,12 +141,14 @@ const resolvers = {
         user: () => user,
         posts: async () => {
             const existingPosts = await Post.find({})
-        //    console.log(existingPosts)
+            //    console.log(existingPosts)
             return existingPosts
 
         },
         //   routines:routines
         routines: async (_, { filter }) => {
+            console.log('triggered')
+            //    console.log(filter)
             let result;
             const existingRoutines = await Routine.find({})
             const existingRoutinesWithTheirDetails = await Promise.all(existingRoutines.map(routine => Promise.all(routine.RoutineDetails.map(({ _id }) => RoutineDetails.findById(_id)))))
@@ -189,7 +195,16 @@ const resolvers = {
             }))
             )
             if (filter !== undefined) {
-                result = existingRoutines.filter(partOfTheDay => partOfTheDay.name == filter)
+                result = filter.map(({ routine_id }) => existingRoutines.filter(({ _id }) => _id == routine_id)).reduce(function (result, item) {
+             //       var key = Object.keys(item)[0];
+              //      console.log(item[0])
+                    let obj = {}
+                    obj = item[0];
+                    result.push(obj)
+                    return result;
+                }, [])
+                //    console.log(x)
+                //   result ]= existingRoutines.filter(({_id})=> _id == filter)
             } else {
                 result = existingRoutines
             }
@@ -202,7 +217,7 @@ const resolvers = {
         me: async (_, { token }) => {
             // const payload = jwt.decode(token, _SECRET);
             // const response = await jwt.verify(token, _SECRET);
-            console.log('in me')
+            // console.log('in me')
             let response = await jwt.verify(token, _SECRET, function (err, decode) {
                 if (err) {
                     console.log(err)
@@ -340,6 +355,7 @@ const resolvers = {
         },
         updateNotification: async (_, { userId, routine_id, morning_notification, night_notification, custom_notification }) => {
             // console.log(id, routineType, morning_notification, night_notification, custom_notification)
+            console.log('eu scuip')
             if (!userId) {// !routine_id) {
                 return {
                     success: false,
@@ -403,7 +419,8 @@ const resolvers = {
                 return {
                     success: true,
                     message: "Set notificaiton done!",
-                    token: token
+                    token: token,
+                    activeNotifications: payload.notifications
                 }
 
             } catch (error) {

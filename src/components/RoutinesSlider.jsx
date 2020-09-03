@@ -4,7 +4,7 @@ import Card from './Card'
 import SectionHeader from './SectionHeader'
 
 const RoutinesSlider = ({ data, item, navigation, inputRef}) => {
-   console.log(inputRef)
+   //console.log(inputRef)
     return (
         <View style={styles.container}>
             <SectionHeader ref={inputRef} innerText={'Choose your favourite routine from below'} topText={'Predefined routines'}/>

@@ -15,10 +15,22 @@ import Navigation from './src/navigation/Navigation';
 import PushHandlerRedirect from './src/navigation/PushHandler'
 import { AsyncStorage } from 'react-native';
 
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+  },
+}
+
 
 const client = new ApolloClient(
   {
     cache: new InMemoryCache(),
+    defaultOptions: defaultOptions,
     link: new HttpLink(
       {
         uri: 'http://homesev.tplinkdns.com:4000/graphql' //'http://homesev.tplinkdns.com:4000/'

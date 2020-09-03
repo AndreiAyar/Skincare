@@ -89,9 +89,7 @@ const ProfileMini = ({data, handleScrollToRef }) => {
                   </Text>
                 </TouchableOpacity>
                 <View
-                  onLayout={(event) =>
-                    (fieldThreelayout = event.nativeEvent.layout)
-                  }
+                 
                   id="spliiter"
                   style={{ width: 1, height: 40, backgroundColor: "#F3F3FF" }}
                 ></View>
