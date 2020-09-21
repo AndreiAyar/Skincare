@@ -63,7 +63,7 @@ const ProfileMini = ({data, handleScrollToRef }) => {
                 </View>
                 <View>
                   <Text style={styles.inner_profile_text}>Active routine</Text>
-                  <Text style={{ alignSelf: "center" }}>-</Text>
+                  <Text style={{ alignSelf: "center" }}>Morning, Night</Text>
                 </View>
               </View>
               <View>
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inner_profile_text: {
+    alignSelf:'center',
     fontSize: 12,
     color: "#A5A4AD",
   },

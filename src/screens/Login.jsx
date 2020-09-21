@@ -11,13 +11,12 @@ import * as Icon from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
 //import {MainState}
-import {storeToken, readToken} from "../controllers/StorageHandler";
+import { storeToken, readToken } from "../controllers/StorageHandler";
 import validate from "../../shared/validate";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { CommonActions } from "@react-navigation/native";
 import { MainStateContext } from "../context/MainContext";
-
 
 const LOGIN_GQL = gql`
   mutation login($email: String!, $password: String!) {
@@ -31,11 +30,11 @@ const LOGIN_GQL = gql`
 let allowRegister = { allowEmail: false, allowPassword: false };
 
 const Logon = ({ navigation }) => {
-  const [email, setEmail] = useState("a@a.a"); //null
-  const [password, setPasword] = useState("aaaaaa"); //null
+  const [email, setEmail] = useState(""); //null
+  const [password, setPasword] = useState(""); //null
   const [message, setMessage] = useState({ emailErr: "", passErr: "" });
   const mainStateContext = useContext(MainStateContext);
-  
+
   const [login, { data, loading }] = useMutation(LOGIN_GQL, {
     onCompleted(data) {
       // console.log(data.login.token)
@@ -43,7 +42,7 @@ const Logon = ({ navigation }) => {
         //     console.log(` A venit din backend: ${data.login.token}`)
         storeToken(data.login.token);
         mainStateContext.setStoredData(data.login.token);
-        mainStateContext.setNavigation(navigation)
+        mainStateContext.setNavigation(navigation);
         //     navigation.dispatch(
         //        CommonActions.reset({
         //         index: 1,
@@ -156,6 +155,9 @@ const Logon = ({ navigation }) => {
         <View style={styles.input_container}>
           <Text style={styles.h2}>E-mail</Text>
           <TextInput
+            autoCapitalize="none"
+            textContentType="emailAddress"
+            keyboardType="email-address"
             label="E-mail"
             autoCompleteType="email"
             defaultValue={email}

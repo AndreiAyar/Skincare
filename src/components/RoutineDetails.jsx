@@ -58,19 +58,19 @@ const RoutineDetails = (props) => {
           <View style={styles.inner_text}>
             <Text
               style={{
-                width: 100,
+                width: 200,
                 textAlign: "left",
                 color: "#A5A4AD",
                 paddingBottom: 2,
-                fontSize: 12,
+                fontSize: 15,
               }}
               numberOfLines={2}
             >
               {name}
             </Text>
             <Text
-              style={{ width: 100, textAlign: "left", fontSize: 14 }}
-              numberOfLines={2}
+              style={{ width: 200,textAlign: "left", fontSize: 14 }}
+              numberOfLines={3}
             >
               {description}
             </Text>

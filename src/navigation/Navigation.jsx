@@ -73,6 +73,7 @@ const Navigation = ({ref}) => {
       require("../resources/products/manuel.png"),
       require("../resources/products/cerave.png"),
       require("../resources/products/aqua.png"),
+      require("../resources/products/3337872411991-10.png"),
       require("../resources/discover/1.jpg"),
       require("../resources/discover/1.jpg"),
       require("../resources/discover/2.jpg"),

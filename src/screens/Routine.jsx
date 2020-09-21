@@ -237,7 +237,7 @@ const Routine = (props) => {
 };
 
 const RoutineTime = ({ routeParams, routine_id, type }) => {
-  const [time, setTime] = useState( moment("09:00", "HH:mm").toDate());
+  const [time, setTime] = useState( moment("22:46", "HH:mm").toDate());
   const [show, setShow] = useState(false);
  const {assignNotification} = useNotification()
   const navigation = useNavigation();
