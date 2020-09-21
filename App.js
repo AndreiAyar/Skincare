@@ -31,7 +31,7 @@ const client = new ApolloClient(
     defaultOptions: defaultOptions,
     link: new HttpLink(
       {
-        uri: 'http://homesev.tplinkdns.com:4000/graphql' 
+        uri: 'http://homesev.tplinkdns.com:4000/graphql' //local env
       }
     )
   })

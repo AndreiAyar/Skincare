@@ -62,3 +62,4 @@ buck-out/
 .expo/*
 #misc
 /src/resources/for_work
+/backend/nodemon.json
