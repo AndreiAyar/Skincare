@@ -60,3 +60,5 @@ buck-out/
 
 # Expo
 .expo/*
+#misc
+/src/resources/for_work
