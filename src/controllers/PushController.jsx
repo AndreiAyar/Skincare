@@ -5,7 +5,7 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { MainState, MainStateContext } from '../context/MainContext'
 
-const PushController = ({ laba }) => {
+const PushController = ({ name }) => {
     const [state, setState] = useState({
         expoPushToken: '',
         notification: {},
@@ -63,7 +63,7 @@ const PushController = ({ laba }) => {
         mainStateContext.setState(prevState => ({
             ...prevState,
             user: {
-                username: laba
+                username: name
             }
         }))
         setState({
@@ -96,7 +96,7 @@ const PushController = ({ laba }) => {
     const handlePress = () => {
         mainStateContext.setNotificationData(prevState => ({
             ...prevState,
-            title: prevState.title = laba
+            title: prevState.title = name
         }))
         sendPushNotification();
     }
