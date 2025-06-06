@@ -72,12 +72,9 @@ const Routine = (props) => {
 
   let scrollAnimatedValue = new Animated.Value(0);
   const { id, type, products } = props.route.params;
-  //console.log('fum', id)
+
   let routine_id = id;
-  // console.log('rid')
-  // console.log(products)
-  // console.log(props.route.params);
-  //console.log('id la rutina ? ', id)
+
   const insets = useSafeArea();
   const { top: marginTop } = insets;
 
@@ -266,10 +263,8 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
 
     setShow(Platform.OS === "ios");
     setTime(currentTime);
-    //  console.log("sa mori tu");
+ 
     Platform.OS == "android" && setNotification(currentTime);
-    console.log(time, "in stsate");
-    //  console.log(moment(currentTime).format("YYYY-MM-DD HH:mm:ss"));
   };
 
   const style = StyleSheet.create({

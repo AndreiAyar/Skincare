@@ -223,12 +223,12 @@ const resolvers = {
                     console.log(err)
                     return null
                 } else {
-                    console.log(`in else`)
+             
                     console.log(decode.data)
                     return decode.data
                 }
             })
-            console.log(`in response`)
+         
             console.log(response)
             return response
         }
