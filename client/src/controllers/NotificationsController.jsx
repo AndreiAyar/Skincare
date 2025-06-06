@@ -61,9 +61,7 @@ const useNotification = () => {
         incomingNotifications &&
         incomingNotifications.activeNotifications &&
         incomingNotifications.activeNotifications.map((el, index) => {
-          //   console.log(Object.keys(el));
           if (el["routine_id"]) {
-            //    console.log('Pentru rotine id', el.routine_id)
             return {
               [el["routine_id"]]: {
                 ["morning_notification"]: {
@@ -82,9 +80,7 @@ const useNotification = () => {
       notificationHours &&
         notificationHours.map((hours) => {
           notificationBody.routines.map((notif, notificationIndex) => {
- 
             if (hours[notif._id]) {
-   
               if (Object.keys(hours)[0] == notif._id) {
                 for (let i in notif.RoutineDetails) {
                   if (notif.RoutineDetails[i].partOfDay == "morning") {
@@ -143,16 +139,15 @@ const useNotification = () => {
     );
     let adjustedTime = () => {
       let now = moment().format("YYYY-MM-DD HH:mm:ss");
- 
+
       let fromDB = moment(time).format("YYYY-MM-DD HH:mm:ss"); // ce vine din DB
- 
+
       let correctTime = time;
       if (fromDB < now) {
         let daysToAdd = moment(now).diff(fromDB, "days") + 1;
- 
 
         let tomorow = moment(correctTime).add(daysToAdd, "days").toDate(); //new Date(fromDB.getTime() + 1000 * 60 * 60 * 24);
- 
+
         correctTime = tomorow;
       }
       return new Date(correctTime).getTime();
@@ -182,12 +177,9 @@ const useNotification = () => {
       localnotification,
       schedulingOptions
     );
-    console.log(schedulingOptions);
   };
   useEffect(() => {
     if (firstTrigger) {
-      console.log("inuseEffect");
-      console.log(currentRoutine);
       getRoutines({
         variables: {
           filter: currentRoutine.map((id) => ({ routine_id: id })),
@@ -199,8 +191,6 @@ const useNotification = () => {
   }, [incomingNotifications]);
   useEffect(() => {
     if (firstData && data) {
-      console.log("vin Datele");
-      //   console.log(data)
       setNotificationBody(data);
       setCurrentRoutine([]);
       //console.log(notificationBody)
@@ -223,4 +213,3 @@ const useNotification = () => {
 };
 
 export default useNotification;
- 

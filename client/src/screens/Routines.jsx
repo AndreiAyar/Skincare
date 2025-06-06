@@ -49,15 +49,15 @@ const ROUTINES_GQL = gql`
 `;
 const screenWidth = Dimensions.get("screen").width;
 const Routines = ({ route, navigation }) => {
-  const { id, routine,routine_id } = route.params;
-  //console.log('ce e in routine', routine_id)
+  const { id, routine, routine_id } = route.params;
+
   //  let routinesData, isLoading, isError;
   const routinesData = useQuery(ROUTINES_GQL, {
-    variables: { filter: {routine_id:routine_id}},
+    variables: { filter: { routine_id: routine_id } },
   });
   //console.log(routinesData.data)
   if (routinesData && routinesData.data) {
- ///   console.log(routinesData.data);
+    ///   console.log(routinesData.data);
   }
 
   const [setSkin, { data, loading }] = useMutation(SKIN_GQL, {
@@ -66,9 +66,8 @@ const Routines = ({ route, navigation }) => {
     },
   });
 
-  //console.log('aici', id)
   const skinID = id;
-  //console.log(routine)
+
   const { setSkinType } = useContext(MainStateContext);
   const mainStateContext = useContext(MainStateContext);
   const userID =
@@ -159,16 +158,17 @@ const Routines = ({ route, navigation }) => {
           </TouchableOpacity>
           {routinesData && routinesData.data ? (
             <View style={styles.banner_section}>
-                 {routinesData.data.routines.map(({RoutineDetails,_id}) => RoutineDetails.map(({partOfDay,products}, key)=>(
-                  // console.log('coaie',_id  ),
-                <RoutineBanner
-                  navigation={navigation}
-                  key={key}
-                  arrow
-                  mainRoutineID = {_id}
-                  data={{partOfDay,products}}//{ bannerData._id, bannerData.partOfDay,`${"steps"} Steps and products`}
-                />
-                 )))}
+              {routinesData.data.routines.map(({ RoutineDetails, _id }) =>
+                RoutineDetails.map(({ partOfDay, products }, key) => (
+                  <RoutineBanner
+                    navigation={navigation}
+                    key={key}
+                    arrow
+                    mainRoutineID={_id}
+                    data={{ partOfDay, products }} //{ bannerData._id, bannerData.partOfDay,`${"steps"} Steps and products`}
+                  />
+                ))
+              )}
             </View>
           ) : (
             <Image

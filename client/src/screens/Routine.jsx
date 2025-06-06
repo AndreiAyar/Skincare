@@ -311,7 +311,7 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
   };
   const handleNotificationUpdateInDatabase = (w, r, u, t) => {
     //when,routineID, user, time
-    // console.log("cand in zi", w);
+ 
     switch (w) {
       case "morning":
         updateNotification({
