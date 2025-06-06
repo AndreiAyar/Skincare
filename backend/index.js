@@ -184,7 +184,6 @@ const resolvers = {
     },
     //   routines:routines
     routines: async (_, { filter }) => {
- 
       let result;
       const existingRoutines = await Routine.find({});
       const existingRoutinesWithTheirDetails = await Promise.all(
@@ -196,7 +195,7 @@ const resolvers = {
           )
         )
       );
- 
+
       existingRoutines.map(({ RoutineDetails }, existingRoutinesIndex) =>
         RoutineDetails.map(({ _id }, routineDetailsIndex) => {
           for (let i in existingRoutinesWithTheirDetails) {
@@ -228,14 +227,13 @@ const resolvers = {
           )
         )
       );
- 
+
       existingRoutines.map(({ RoutineDetails }, existingRoutinesIndex) =>
         RoutineDetails.map(({ products }, routineDetailsIndex) =>
           products.map(({ _id }, productIndex) => {
             for (let i in existingRoutinesWithTheirDetails) {
               existingRoutinesWithTheirProducts[i].map((products) =>
                 products.map((product) => {
- 
                   if (product._id == _id) {
                     let newProducts = {
                       type: product.type,
@@ -381,15 +379,7 @@ const resolvers = {
         _SECRET,
         { expiresIn: "1y" }
       );
-      /**
-       * The above mentioned token verifications
-       */
-      // const response = await jwt.verify(token, _SECRET);
-      //  console.log(response);
-      /**
-       * Return the user and auth success.
-       */
-      // console.log(payload)
+
       return {
         user: payload,
         token,
@@ -398,7 +388,6 @@ const resolvers = {
       };
     },
     setSkin: async (_, { id, skintype }) => {
-      console.log(id, skintype);
       if (!id || !skintype) {
         return {
           success: false,
@@ -443,7 +432,6 @@ const resolvers = {
         custom_notification,
       }
     ) => {
-      // console.log(id, routineType, morning_notification, night_notification, custom_notification)
       if (!userId) {
         // !routine_id) {
         return {
@@ -501,8 +489,6 @@ const resolvers = {
                   }
                 );
               }
-
-              //   console.log(z)
             }
           });
           await userRoutineToBeModified.save();
@@ -536,9 +522,7 @@ const resolvers = {
       }
     },
     removeNotification: async (_, { userId, routine_id }) => {
-      // console.log(id, routineType, morning_notification, night_notification, custom_notification)
       if (!userId) {
-        // !routine_id) {
         return {
           success: false,
           message: "Something went wrong. Please try again!",
@@ -630,7 +614,7 @@ const resolvers = {
         });
 
         await createdRoutineWithDetails.save();
-        console.log(createdRoutineWithDetails);
+
         return createdRoutineWithDetails;
       } catch (error) {
         console.log(error);
@@ -659,7 +643,7 @@ const resolvers = {
         });
 
         await createdRoutine.save();
-        console.log(createdRoutine);
+
         return createdRoutine;
       } catch (error) {
         console.log(error);
@@ -673,7 +657,6 @@ const resolvers = {
       _,
       { title, tags, entire_post, src, shortDesc, inner_src }
     ) => {
-      //   console.log(_)
       if (!title) {
         return {
           name: "Please insert a title",
