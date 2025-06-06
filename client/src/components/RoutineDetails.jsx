@@ -10,7 +10,6 @@ import {
 const screenWidth = Math.round(Dimensions.get("window").width);
 
 const RoutineDetails = (props) => {
- // console.log("in details", props.data);
   const { data } = props;
   //before database connection
   // let data = [{ id: 1, type: 'Cleanser', source: require('../resources/products/1.png') },
