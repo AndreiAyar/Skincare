@@ -365,7 +365,6 @@ const resolvers = {
                 // let userRoutineToBeModified = await User.findById(userId);
                 let userRoutineToBeModified = await User.findOne({ _id: userId }).where({ "notifications.routine_id": routine_id })
                 if (!userRoutineToBeModified) {// let's see if there is any user available and add them that routine :) 
-                    console.log('nu exista')
                     let userExistsToBeUpdated = await User.findById(userId);
                     if (userExistsToBeUpdated) {
                         userExistsToBeUpdated.notifications.push({ routine_id, morning_notification, night_notification, custom_notification })
@@ -374,7 +373,6 @@ const resolvers = {
                 } else if (userRoutineToBeModified) {
                     userRoutineToBeModified.notifications.map(async notifications => {
                         if (notifications.routine_id === routine_id) {
-                            //console.log(notifications)
                             if (morning_notification) {
                                 await User.findOneAndUpdate({ "_id": userId, "notifications.routine_id": routine_id },
                                     {
