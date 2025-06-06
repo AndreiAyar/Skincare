@@ -184,8 +184,7 @@ const resolvers = {
     },
     //   routines:routines
     routines: async (_, { filter }) => {
-      console.log("triggered");
-      //    console.log(filter)
+ 
       let result;
       const existingRoutines = await Routine.find({});
       const existingRoutinesWithTheirDetails = await Promise.all(
@@ -197,7 +196,7 @@ const resolvers = {
           )
         )
       );
-      //    console.log(existingRoutinesWithTheirDetails)
+ 
       existingRoutines.map(({ RoutineDetails }, existingRoutinesIndex) =>
         RoutineDetails.map(({ _id }, routineDetailsIndex) => {
           for (let i in existingRoutinesWithTheirDetails) {
@@ -229,14 +228,14 @@ const resolvers = {
           )
         )
       );
-      //   console.log(existingRoutinesWithTheirProducts[0])
+ 
       existingRoutines.map(({ RoutineDetails }, existingRoutinesIndex) =>
         RoutineDetails.map(({ products }, routineDetailsIndex) =>
           products.map(({ _id }, productIndex) => {
             for (let i in existingRoutinesWithTheirDetails) {
               existingRoutinesWithTheirProducts[i].map((products) =>
                 products.map((product) => {
-                  //console.log(product)
+ 
                   if (product._id == _id) {
                     let newProducts = {
                       type: product.type,
@@ -268,13 +267,11 @@ const resolvers = {
             existingRoutines.filter(({ _id }) => _id == routine_id)
           )
           .reduce(function (result, item) {
- 
             let obj = {};
             obj = item[0];
             result.push(obj);
             return result;
           }, []);
- 
       } else {
         result = existingRoutines;
       }
@@ -282,7 +279,6 @@ const resolvers = {
       return result;
     },
     me: async (_, { token }) => {
- 
       let response = await jwt.verify(token, _SECRET, function (err, decode) {
         if (err) {
           return null;
@@ -556,14 +552,11 @@ const resolvers = {
         if (userExistsToBeUpdated) {
           userExistsToBeUpdated.notifications.map(async (notifications) => {
             if (notifications.routine_id === routine_id) {
-              //console.log(notifications)
               await userExistsToBeUpdated.notifications.pull(notifications._id);
-              //   console.log(z)
             }
           });
         }
-        console.log(userExistsToBeUpdated);
-        // userExistsToBeUpdated.notifications.deleteOne({"notifications.routine_id":routine_id})
+
         await userExistsToBeUpdated.save();
         const userExists = await User.find({ _id: userId });
         const payload = {
