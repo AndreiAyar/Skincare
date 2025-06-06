@@ -7,7 +7,7 @@ import {
   PlatformTouchableWithoutFeedback,
   TouchableOpacity,
   Dimensions,
-  Text
+  Text,
 } from "react-native";
 const screenWidth = Dimensions.get("screen").width;
 import { Constants, Notifications } from "expo";
@@ -31,8 +31,7 @@ export default class LocalNotification extends Component {
   }
   _handleButtonPress = () => {
     this.props.showTime();
-   // console.log('a da t ok baiatu')
-    //console.log(this.props.time);
+
     const localnotification = {
       title: `Time for your ${this.props.title} 🥰 `,
       body: `Get in the app to find more about your ${this.props.title} routine !`,
@@ -53,8 +52,6 @@ export default class LocalNotification extends Component {
       schedulingOptions
     );
     this.setState({ id: id });
-    let NotId = this.state.id;
-   // console.log(NotId);
   };
   listenForNotifications = () => {
     Notifications.addListener((notification) => {
