@@ -12,8 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("screen").width;
 import calculateRead from '../controllers/CalculateRead'
 const DiscoverCard = ({ item, navigation, eta}) => {
-  // const navigation = useNavigation()
-  //console.log(navigation)
+ 
   return (
     <TouchableOpacity
       onPress={() =>

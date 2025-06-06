@@ -21,7 +21,7 @@ import {
 
 const screenWidth = Dimensions.get("screen").width;
 const RoutineBanner = ({mainRoutineID, data, timer, navigation, arrow, }) => {
- // console.log("ici", data);
+ 
   const { partOfDay, products, innerText} = data;
   const styles = StyleSheet.create({
     banner: {

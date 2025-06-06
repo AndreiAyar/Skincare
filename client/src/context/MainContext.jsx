@@ -41,9 +41,6 @@ const MainState = ({ children }) => {
   const [navigation, setNavigation] = useState();
   const [notification, setNotification] = useState();
   const [state, dispatch] = useReducer(AppReducer, initialState);
-  //console.log(storedData)
-  // console.log('innotif',notification);
- // RootNavigation && console.log(RootNavigation);
 
   const { data, loading } = useQuery(ME_GQL, {
     variables: {
@@ -51,32 +48,12 @@ const MainState = ({ children }) => {
     },
 
     onCompleted(data) {
-      //console.log(storedData)
       dispatch({
         type: "INIT_USER",
         payload: data.me,
       });
     },
   });
-
-  //Actions
-  // const assignNotification = (
-  //   partOfTheDay,
-  //   body,
-  //   time,
-  //   routine_id,
-  //   route_params
-  // ) => {
-  //   dispatch({
-  //     type: "ASSIGN_NOTIFICATION",
-  //     title: `Time for your ${partOfTheDay} 🥰 !`,
-  //     body: body,
-  //     time: time,
-  //     partOfTheDay,
-  //     routine_id,
-  //     route_params,
-  //   });
-  // };
 
   const setSkinType = (skintype) => {
     dispatch({
@@ -85,7 +62,7 @@ const MainState = ({ children }) => {
     });
   };
   const handleNotification = async (notification) => {
-    console.log(notification)
+    console.log(notification);
     setNotification(notification);
     RootNavigation.navigate("Routine", {
       screen: "Routines",
@@ -107,7 +84,6 @@ const MainState = ({ children }) => {
         ? setStoredData("_")
         : setStoredData(result);
     });
-
   }, []);
 
   return (

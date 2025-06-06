@@ -14,7 +14,7 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 const screenWidth = Math.round(Dimensions.get("window").width);
 
 const Card = ({ item, navigation }) => {
-  // console.log(navigation)
+ 
   return (
     <TouchableWithoutFeedback
       onPress={() =>

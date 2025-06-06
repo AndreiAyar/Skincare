@@ -17,13 +17,9 @@ import { MainStateContext } from "../context/MainContext";
 import { AsyncStorage } from "react-native";
 
 const screenWidth = Math.round(Dimensions.get("window").width);
-const ProfileMini = ({data, handleScrollToRef }) => {
-  //let x = AsyncStorage.getItem('_token', (error, result) => error ? null : result)
-  //console.log(` Tokenu meu ${x}`)
-  //  console.log(ref)
+const ProfileMini = ({ data, handleScrollToRef }) => {
   const mainStateContext = useContext(MainStateContext);
-//  console.log(data.filter(item => item.id == mainStateContext.state.user.skintype).map(obj => obj.name))
- // console.log(mainStateContext.userState);
+
   return (
     <>
       <View style={styles.shadow}>
@@ -51,13 +47,19 @@ const ProfileMini = ({data, handleScrollToRef }) => {
                 <View>
                   <Text style={styles.inner_profile_text}>Skin Type</Text>
                   <Text style={{ alignSelf: "center" }}>
-                  {mainStateContext &&
+                    {mainStateContext &&
                     mainStateContext.state.user &&
-                    mainStateContext.state.user.skintype == -1 ? "-" :
-                    mainStateContext &&
-                    mainStateContext.state.user &&
-                    mainStateContext.state.user.skintype
-                      ? data.filter(item => item._id == mainStateContext.state.user.skintype).map(obj => obj.name)
+                    mainStateContext.state.user.skintype == -1
+                      ? "-"
+                      : mainStateContext &&
+                        mainStateContext.state.user &&
+                        mainStateContext.state.user.skintype
+                      ? data
+                          .filter(
+                            (item) =>
+                              item._id == mainStateContext.state.user.skintype
+                          )
+                          .map((obj) => obj.name)
                       : "Loading..."}
                   </Text>
                 </View>
@@ -89,7 +91,6 @@ const ProfileMini = ({data, handleScrollToRef }) => {
                   </Text>
                 </TouchableOpacity>
                 <View
-                 
                   id="spliiter"
                   style={{ width: 1, height: 40, backgroundColor: "#F3F3FF" }}
                 ></View>
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inner_profile_text: {
-    alignSelf:'center',
+    alignSelf: "center",
     fontSize: 12,
     color: "#A5A4AD",
   },
