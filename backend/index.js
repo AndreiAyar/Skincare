@@ -268,15 +268,13 @@ const resolvers = {
             existingRoutines.filter(({ _id }) => _id == routine_id)
           )
           .reduce(function (result, item) {
-            //       var key = Object.keys(item)[0];
-            //      console.log(item[0])
+ 
             let obj = {};
             obj = item[0];
             result.push(obj);
             return result;
           }, []);
-        //    console.log(x)
-        //   result ]= existingRoutines.filter(({_id})=> _id == filter)
+ 
       } else {
         result = existingRoutines;
       }
@@ -284,20 +282,15 @@ const resolvers = {
       return result;
     },
     me: async (_, { token }) => {
-      // const payload = jwt.decode(token, _SECRET);
-      // const response = await jwt.verify(token, _SECRET);
-      // console.log('in me')
+ 
       let response = await jwt.verify(token, _SECRET, function (err, decode) {
         if (err) {
-          console.log(err);
           return null;
         } else {
-          console.log(decode.data);
           return decode.data;
         }
       });
 
-      console.log(response);
       return response;
     },
   },
