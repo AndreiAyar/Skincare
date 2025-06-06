@@ -13,7 +13,7 @@ const Post = require('./models/Posts')
 const validate = require('../shared/validate')
 const jwt = require('jsonwebtoken')
 
-const _SECRET = 'oA*m38FzEY,:UsLmosNm^uokjJJs)PO.,Jasdadasssddddddsqqqzzzzzqqcasqqqqqqyutasasdcbaasasaaasssssa1aalklklklksdddsaasscccazasdadadasssadsasdsanfdsnnnlsSA03ss2lillla1212dssskkxvvvooqqrqlldddlffskk0llllldo3k4IAjjkkkml;;;lllldxxkfkIOoiIi""1S1s|"SVISN,3&:oU&/m@,.;;;Zaa)())))ob*NFu|j&_+,:eA_ay9qWz*';
+const _SECRET = process.env.SECRET;
 // merge type defs
 const typeDefs = gql`
  
@@ -355,7 +355,6 @@ const resolvers = {
         },
         updateNotification: async (_, { userId, routine_id, morning_notification, night_notification, custom_notification }) => {
             // console.log(id, routineType, morning_notification, night_notification, custom_notification)
-            console.log('eu scuip')
             if (!userId) {// !routine_id) {
                 return {
                     success: false,
