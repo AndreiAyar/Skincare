@@ -37,21 +37,7 @@ import { NavigationContext } from "@react-navigation/native";
 const Navigation = ({ref}) => {
  
   const mainStateContext = useContext(MainStateContext);
-
-  // mainStateContext &&
-  //   mainStateContext.state &&
-  //   mainStateContext.state.notifications &&
-  //   mainStateContext.state.notifications.notification &&
-    // navigation.navigate("Routine", {
-    //   screen: "Routines",
-    //   id:  mainStateContext.state.notifications.notification.id,
-    //   steps: mainStateContext.state.notifications.notification.products.length,
-    //   type: type,
-    //   products: mainStateContext.state.notifications.notification.products,
-    // });
-
-  //console.log(`User aici : ${mainStateContext.state.user.username}`)
-
+ 
   const [isReady, setIsReady] = useState(false);
   const [isSplashReady, setSplashReady] = useState(false);
   const _cacheSplashResourcesAsync = async () => {
