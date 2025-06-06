@@ -91,10 +91,7 @@ const useNotification = () => {
               if (Object.keys(hours)[0] == notif._id) {
                 for (let i in notif.RoutineDetails) {
                   if (notif.RoutineDetails[i].partOfDay == "morning") {
-                    // console.log(notif.RoutineDetails[i].partOfDay)
-                    // console.log(notif._id)
-                    // console.log(hours[notif._id].morning_notification.time)
-                    // console.log(notif.RoutineDetails[i])
+ 
                     insertNotificationIntoDevice(
                       "Morning Notification",
                       `Time for your Morning Routine 🥰 ☀️ !`,
@@ -104,10 +101,7 @@ const useNotification = () => {
                     );
                   }
                   if (notif.RoutineDetails[i].partOfDay == "night") {
-                    // console.log(notif.RoutineDetails[i].partOfDay)
-                    // console.log(notif._id)
-                    // console.log(hours[notif._id].morning_notification.time)
-                    // console.log(notif.RoutineDetails[i])
+  
                     insertNotificationIntoDevice(
                       "Night Notification",
                       `Time for your Night Routine 🥰 🌙 !`,
@@ -117,10 +111,7 @@ const useNotification = () => {
                     );
                   }
                   if (notif.RoutineDetails[i].partOfDay == "weekly") {
-                    // console.log(notif.RoutineDetails[i].partOfDay)l
-                    // console.log(notif._id)
-                    // console.log(hours[notif._id].morning_notification.time)
-                    // console.log(notif.RoutineDetails[i])
+ 
                     insertNotificationIntoDevice(
                       "Weekly Notification",
                       `Time for your Weekly Routine 🥰 📅 !`,

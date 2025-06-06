@@ -27,7 +27,7 @@ import calculateRead from "../controllers/CalculateRead";
 
 const BlogPost = (props) => {
   const [pos, setPos] = useState(0);
-  console.log(props.route.params);
+ 
   const { title, src, entire_post, tags } = props.route.params.item;
   const IMAGE_HEIGHT = 300;
   let now;
@@ -39,7 +39,7 @@ const BlogPost = (props) => {
     if (now < -70) {
       setPos(now);
     }
-    // console.log(event.nativeEvent.contentOffset.y);
+ 
   };
   useEffect(() => {
     if (pos < -70) {

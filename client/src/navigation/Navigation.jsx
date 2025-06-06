@@ -86,10 +86,7 @@ const Navigation = ({ref}) => {
     await Promise.all([cacheImages, cacheFonts]);
     setIsReady(true);
   };
-  //   console.log(mainStateContext && mainStateContext.state.user == null)
-  //  console.log(`asta e in state ${mainStateContext.state.user && mainStateContext.state.user.username}`)
-  // console.log(mainStateContext)
-  // console.log(!isReady)
+ 
   return (
     <>
       {!isSplashReady && (
