@@ -9,11 +9,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 
 
-import { MainState, MainStateContext } from './src/context/MainContext'
+import { MainState } from './src/context/MainContext'
 
 import Navigation from './src/navigation/Navigation';
-import PushHandlerRedirect from './src/navigation/PushHandler'
-import { AsyncStorage } from 'react-native';
 
 const defaultOptions = {
   watchQuery: {
