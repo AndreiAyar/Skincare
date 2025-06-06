@@ -238,7 +238,6 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
   const [show, setShow] = useState(false);
   const { assignNotification } = useNotification();
   const navigation = useNavigation();
-  // console.log(notifHook)
 
   const { state, setNavigation } = useContext(MainStateContext);
   const [updateNotification, { data, loading }] = useMutation(
@@ -254,7 +253,6 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
     }
   );
 
-  //console.log(state.user._id);
   const onChange = (event, selectedTime) => {
     let currentDay = moment().day();
     let currentTime = moment(selectedTime || time)
@@ -365,8 +363,6 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
           partOfDay: type.type,
           innerText: `Daily reminder set at: ${moment(time).format("HH:mm")}`,
         }}
-        // innerText={`{Daily reminder set at: ${moment(time).format("HH:mm")}`}
-        //  taraba={()=>console.log('muie')}
       />
       {show && (
         <LocalNotification

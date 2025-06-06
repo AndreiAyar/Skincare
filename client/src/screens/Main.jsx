@@ -44,17 +44,11 @@ const ROUTINES_GQL = gql`
 `;
 
 const Main = ({ navigation }) => {
-  const mainStateContext = useContext(MainStateContext);
- // mainStateContext.setNavigation(navigation)
   let scrollRef = null;
-  let rows;
+
   let skinTypes;
   const handleScrollToRef = () => {
-    scrollRef.scrollTo({ y: 200, animated: true }); 
-    //   rows.measure((ox, oy, width, height, px, py) => {
-    //     console.log(oy)
-    //   })
-    // console.log(rows.measure)
+    scrollRef.scrollTo({ y: 200, animated: true });
   };
   const { data, loading, error } = useQuery(ROUTINES_GQL);
   //if (loading) return "<Text/Loading...";
@@ -83,13 +77,13 @@ const Main = ({ navigation }) => {
         <View style={styles.container}>
           <ScrollView ref={(ref) => (scrollRef = ref)}>
             <View style={{ flex: 1, backgroundColor: "white" }}>
-               <ProfileMini
+              <ProfileMini
                 data={skinTypes}
                 handleScrollToRef={handleScrollToRef}
               />
               <View>
                 <RoutinesSlider navigation={navigation} data={skinTypes} />
-              </View> 
+              </View>
               <ProductsSlide />
             </View>
           </ScrollView>
