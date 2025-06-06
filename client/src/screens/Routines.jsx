@@ -55,9 +55,9 @@ const Routines = ({ route, navigation }) => {
   const routinesData = useQuery(ROUTINES_GQL, {
     variables: { filter: { routine_id: routine_id } },
   });
-  //console.log(routinesData.data)
+ 
   if (routinesData && routinesData.data) {
-    ///   console.log(routinesData.data);
+   
   }
 
   const [setSkin, { data, loading }] = useMutation(SKIN_GQL, {

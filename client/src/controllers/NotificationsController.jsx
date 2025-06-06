@@ -53,7 +53,7 @@ const useNotification = () => {
 
   useEffect(() => {
     if (firstNotif && incomingNotifications) {
-      console.log("apare h..");
+ 
       let notificationHours;
       getiOSNotificationPermission();
       cancelActiveNotifications();
