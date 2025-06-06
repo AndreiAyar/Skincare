@@ -51,12 +51,12 @@ const UPDATE_NOTIFICATION = gql`
       message
       success
       token
-      activeNotifications{
-      routine_id
-      morning_notification
-      custom_notification
-      night_notification
-    }
+      activeNotifications {
+        routine_id
+        morning_notification
+        custom_notification
+        night_notification
+      }
     }
   }
 `;
@@ -237,54 +237,33 @@ const Routine = (props) => {
 };
 
 const RoutineTime = ({ routeParams, routine_id, type }) => {
-  const [time, setTime] = useState( moment("22:46", "HH:mm").toDate());
+  const [time, setTime] = useState(moment("22:46", "HH:mm").toDate());
   const [show, setShow] = useState(false);
- const {assignNotification} = useNotification()
+  const { assignNotification } = useNotification();
   const navigation = useNavigation();
- // console.log(notifHook)
-    
-  const { state, setNavigation } = useContext( MainStateContext);
+  // console.log(notifHook)
+
+  const { state, setNavigation } = useContext(MainStateContext);
   const [updateNotification, { data, loading }] = useMutation(
     UPDATE_NOTIFICATION,
     {
       onCompleted(data) {
-  
-      //  assignNotification(data.updateNotification);
-    //  notificationHandler.assignNotification();
-      assignNotification(data.updateNotification);
-      //notificationsHandler(data.updateNotification)
-      //  useNotifications(data.updateNotification, routeParams)
+        //  assignNotification(data.updateNotification);
+        //  notificationHandler.assignNotification();
+        assignNotification(data.updateNotification);
+        //notificationsHandler(data.updateNotification)
+        //  useNotifications(data.updateNotification, routeParams)
       },
     }
   );
 
   //console.log(state.user._id);
   const onChange = (event, selectedTime) => {
-      let currentDay = moment().day();
+    let currentDay = moment().day();
     let currentTime = moment(selectedTime || time)
       .day(currentDay)
       .toDate(); //|| time).toDate();
-    //onsole.log(selectedTime, 'atat e selectat')
-    // currentTime && console.log("here", currentTime && moment(currentTime).format("YYYY-MM-DD HH:mm:ss"), moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
-    //  console.log(moment(currentTime).format("YYYY-MM-DD HH:mm:ss") <= moment(new Date()).format("YYYY-MM-DD HH:mm:ss")? "maine" : " azi")
-    //console.log('in bulangiu', selectedTime)
-    //console.log('in state', time)
-    if (
-      moment(currentTime).format("YYYY-MM-DD HH:mm:ss") <=
-      moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
-    ) {
-    // currentTime = moment(selectedTime).add(1, "days").toDate(); //utc().format('YYYY-MM-DDTHH:mm:ssZZ')
-      console.log("maine",currentTime);
-    } else {
-      console.log(
-        "selectat: ",
-        moment(currentTime).utc().format("YYYY-MM-DD HH:mm:ss")
-      );
-      console.log("acum: ", moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-      console.log("azi");
-    //  currentTime  = moment(t).toDate()
-      // currentTime =  moment(selectedTime).add(-1, 'days').toDate();
-    }
+
     setShow(Platform.OS === "ios");
     setTime(currentTime);
     //  console.log("sa mori tu");
@@ -339,7 +318,7 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
   };
   const handleNotificationUpdateInDatabase = (w, r, u, t) => {
     //when,routineID, user, time
-   // console.log("cand in zi", w);
+    // console.log("cand in zi", w);
     switch (w) {
       case "morning":
         updateNotification({
@@ -362,9 +341,8 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
   };
   const partOfTheDay = type.type;
   const setNotification = (time) => {
-   console.log("aci e:", time);
     showTime();
-    //console.log("idu meu este", type.routine_id);
+
     setNavigation(navigation);
     // assignNotification(
     //   partOfTheDay,
@@ -373,14 +351,13 @@ const RoutineTime = ({ routeParams, routine_id, type }) => {
     //   type.routine_id,
     //   routeParams
     // );
-  //  setRouteParams(routeParams)
+    //  setRouteParams(routeParams)
     handleNotificationUpdateInDatabase(
       partOfTheDay,
       type.routine_id,
       state.user._id,
       time
     );
- 
   };
   return (
     <View style={style.container}>
