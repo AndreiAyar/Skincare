@@ -9,6 +9,7 @@ Skincare is a cross-platform mobile application designed to help users manage th
 ## Features
 
 - Personalized skincare routines for different skin types
+- Notification management
 - Product recommendations and details
 - Routine reminders and notifications
 - Discover section with blog posts and tips
